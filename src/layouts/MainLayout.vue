@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header style="background-color: rgb(70, 70, 70);">
       <q-toolbar>
         <q-btn
           flat
@@ -10,27 +10,15 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
+      v-show="leftDrawerOpen"
       bordered
     >
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
@@ -109,6 +97,7 @@ export default defineComponent({
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer () {
+        console.log(leftDrawerOpen.value)
         leftDrawerOpen.value = !leftDrawerOpen.value
       }
     }
