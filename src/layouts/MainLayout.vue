@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header style="background-color: rgb(70, 70, 70);">
+    <q-header style="background-color: rgb(20, 20, 20);">
       <q-toolbar>
         <q-btn
           flat
@@ -16,7 +16,8 @@
     <q-drawer
       v-model="leftDrawerOpen"
       v-show="leftDrawerOpen"
-      bordered
+      elevated
+      style="background-color: rgb(30, 30, 30); color: white;"
     >
       <q-list>
         <EssentialLink
