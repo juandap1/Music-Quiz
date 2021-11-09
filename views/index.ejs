@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+      @font-face {
+        font-family: MusicQuiz;
+        src: url(assets/BadMofo.ttf);
+      }
+
+      .MQText {
+          font-family: MusicQuiz;
+      }
+
+      body {
+        overflow-x: hidden;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+      }
+
+      .header {
+        height: 50px;
+        width: 100%;
+        background-color: rgb(20, 20, 20);
+        transition: margin 0.5s;
+      }
+
+      .header.open {
+        margin-left: 250px;
+      }
+
+      .menu-button {
+        background: transparent;
+        outline: transparent;
+        border: none;
+        width: 40px;
+        height: 40px;
+        margin: 5px;
+        padding: 0;
+        border-radius: 50%;
+      }
+
+      .menu-button:hover {
+        background-color: rgba(150,150,150, 0.3);
+      }
+
+      #main-page {
+        position: relative;
+        background-color: rgb(20, 20, 20);
+        height: 100%;
+        transition: margin 0.5s;
+      }
+
+      #main-page.open {
+        margin-left: 250px;
+      }
+
+      .t1 {
+          position: relative;
+          font-size: 10vw;
+          height: 100%;
+          text-align: center;
+          padding: 0;
+          margin: 0;
+    
+          background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          -webkit-animation: hue 7.5s infinite linear;
+          animation: hue 7.5s infinite linear;
+      }
+  
+      @-webkit-keyframes hue {
+          from {
+              -webkit-filter: hue-rotate(0deg);
+          }
+          to {
+              -webkit-filter: hue-rotate(-360deg);
+          }
+      }
+      @keyframes hue {
+          from {
+              -webkit-filter: hue-rotate(0deg);
+          }
+          to {
+              -webkit-filter: hue-rotate(-360deg);
+          }
+      }
+  
+      .record {
+          position: relative;
+          max-width: 250px;
+          margin: 30px 0;
+          z-index: 2;
+          left: 50%;
+          transform: translateX(-50%);
+      }
+  
+      .mnote {
+          position: absolute;
+          max-width: 45px;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 2;
+      }
+  
+      #main-page svg {
+          position: absolute;
+          z-index: 0;
+          max-width: 310px;
+          top: 0%;
+          left: 50%;
+          transform: translateX(-50%);
+      }
+
+      .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+      }
+
+      .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s
+      }
+
+      #mySidenav.open {
+        width:250px;
+      }
+
+      .answer-mc {
+        margin-bottom: 30px;
+      }
+
+      .mc {
+        text-align: center;
+        background: none;
+        padding: 0;
+        border: double 4px transparent;
+        border-radius: 7.5px;
+        background-image: linear-gradient(rgb(50, 50, 50), rgb(30, 30, 30)), -webkit-linear-gradient(92deg, #f35626, #feab3a);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        -webkit-animation: hue 7.5s infinite linear;
+        animation: hue 7.5s infinite linear;
+        color: white;
+        cursor: pointer;
+      }
+
+      .mc:hover {
+        transform: scale(1.05);
+      }
+
+      .mc h6, p {
+        margin: 8px 0px;
+      }
+      
+      .version {
+        color: rgb(230,230,230);
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin: 10px 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <button id="menu" class="menu-button" tabindex="0" type="button" aria-label="Menu">
+        <img src="assets/menu.svg"/>
+      </button>
+      <button class="menu-button" tabindex="0" type="button" aria-label="Menu" style="float: right;">
+        <img src="assets/settings.svg"/>
+      </button>
+    </div>
+    <div id="mySidenav" class="sidenav">
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Clients</a>
+      <a href="#">Contact</a>
+    </div>
+    <div id="main-page">
+      <div class="row" style="position: relative;">
+          <span class="MQText t1">Music Quiz</span>
+      </div>
+      <div id="playBtn" class="row" style="position: relative;">
+          <img id="record" class="record mbtn" src="assets/record.svg">
+          <img id="note" class="mnote mbtn" src="assets/eighth-note.png">
+          <img id="play" class="mnote mbtn" style="margin-left: 5px;" src="assets/play.png">
+      </div>
+      <div class="row answer-mc">
+        <div class="col-2"></div>
+        <div class="col-3 mc" id="mc1">
+          <h6>Song Title</h6>
+          <p>Artists</p>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-3 mc" id="mc2">
+          <h6>Song Title</h6>
+          <p>Artists</p>
+        </div>
+        <div class="col-2"></div>
+      </div>
+      <div class="row answer-mc">
+        <div class="col-2"></div>
+        <div class="col-3 mc" id="mc3">
+          <h6>Song Title</h6>
+          <p>Artists</p>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-3 mc" id="mc4">
+          <h6>Song Title</h6>
+          <p>Artists</p>
+        </div>
+        <div class="col-2"></div>
+      </div>
+      <span class="version">v1.0.0 beta 1</span>
+    </div>
+    <script src="scripts/record.js"></script>
+    <script>
+      var mc = ["#mc1", "#mc2", "#mc3", "#mc4"];
+      $( document ).ready(async function() {
+        var nextTrackData;
+        var currentTrack;
+        $('.mbtn').css('opacity', '0.2');
+        $('.mbtn').css('cursor', 'default');
+        document.getElementById("note").style.display = "none";
+        $('#menu').on('click', function clickHandler(e) {
+          e.preventDefault();
+          $('#mySidenav').toggleClass('open');
+          $('.header').toggleClass('open');
+          $('#main-page').toggleClass('open');
+        });
+        await fetch(`http://localhost:8000/getsong`, {
+            method:'GET'
+          }).then(res => {
+            return res.json()
+          })
+          .then(json => {
+            console.log(json);
+            nextTrackData = json;
+        });
+        $('#playBtn').on('click', function clickHandler(e) {
+          e.preventDefault();
+          if (!isPlaying) {
+            loadSound(getAudioContext(), nextTrackData.path);
+            currentTrack = nextTrackData;
+            mc = shuffle(mc);
+            for (var i = 0; i < 4; i++) {
+              if (i == 0) {
+                $(mc[i]).find("h6").html(currentTrack.name);
+                $(mc[i]).find("p").html(currentTrack.artists.join(", "));
+              } else {
+                $(mc[i]).find("h6").html(currentTrack.wrong[3-i].split(" - ")[0]);
+                $(mc[i]).find("p").html(currentTrack.wrong[3-i].split(" - ")[1]);
+              }
+            }
+            fetch(`http://localhost:8000/getsong`, {
+              method:'GET'
+            }).then(res => {
+              return res.json()
+            })
+            .then(json => {
+              console.log(json);
+              nextTrackData = json;
+            });
+          }
+        });
+        $('.mbtn').css('opacity', '1');
+        $('.mbtn').css('cursor', 'pointer');
+        init();
+        const xhttp = new XMLHttpRequest();
+      });
+    </script>
+    <script>
+      //sendURL("https://www.youtube.com/watch?v=8F2s8ivKXNY");
+      function sendURL(URL) {
+        window.location.href = `http://localhost:8000/mp3fetch?URL=${URL}`;
+      }
+    </script>
+  </body>
+</html>
