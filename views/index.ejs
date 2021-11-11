@@ -97,6 +97,22 @@
               -webkit-filter: hue-rotate(-360deg);
           }
       }
+      @-webkit-keyframes rev-hue {
+          from {
+              -webkit-filter: hue-rotate(-360deg);
+          }
+          to {
+              -webkit-filter: hue-rotate(0deg);
+          }
+      }
+      @keyframes rev-hue {
+          from {
+              -webkit-filter: hue-rotate(-360deg);
+          }
+          to {
+              -webkit-filter: hue-rotate(0deg);
+          }
+      }
   
       .record {
           position: relative;
@@ -185,6 +201,57 @@
         right: 0;
         margin: 10px 15px;
       }
+
+      .track {
+        width: 300px;
+        background: none;
+        border: double 6px transparent;
+        border-radius: 7.5px;
+        background-image: linear-gradient(rgb(50, 50, 50), rgb(30, 30, 30)), -webkit-linear-gradient(92deg, #f35626, #feab3a);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        -webkit-animation: hue 7.5s infinite linear;
+        animation: hue 7.5s infinite linear;
+        margin: auto;
+        padding: 0px;
+        text-align: center;
+        color: rgb(210,210,210);
+        margin-bottom: 50px;
+      }
+
+      .t-container {
+        margin: 20px;
+      }
+
+      .track img {
+        position: relative;
+        width: 80%;
+        border-radius: 15px;
+        margin: 20px 0px;
+        -webkit-animation: rev-hue 7.5s infinite linear;
+        animation: rev-hue 7.5s infinite linear;
+      }
+
+      .p-a {
+        width: 250px;
+        text-align: center;
+        background: none;
+        padding: 0;
+        border: double 4px transparent;
+        border-radius: 7.5px;
+        background-image: linear-gradient(rgb(50, 50, 50), rgb(30, 30, 30)), -webkit-linear-gradient(92deg, #f35626, #feab3a);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        -webkit-animation: hue 7.5s infinite linear;
+        animation: hue 7.5s infinite linear;
+        color: white;
+        cursor: pointer;
+        margin: auto;
+      }
+
+      .p-a:hover {
+        transform: scale(1.05);
+      }
     </style>
   </head>
   <body>
@@ -206,38 +273,56 @@
       <div class="row" style="position: relative;">
           <span class="MQText t1">Music Quiz</span>
       </div>
-      <div id="playBtn" class="row" style="position: relative;">
+      <div id="quiz">
+        <div id="playBtn" class="row" style="position: relative;">
           <img id="record" class="record mbtn" src="assets/record.svg">
           <img id="note" class="mnote mbtn" src="assets/eighth-note.png">
           <img id="play" class="mnote mbtn" style="margin-left: 5px;" src="assets/play.png">
+        </div>
+        <div id="mc">
+          <div class="row answer-mc">
+            <div class="col-2"></div>
+            <div class="col-3 mc" id="mc1">
+              <h6>Song Title</h6>
+              <p>Artists</p>
+            </div>
+            <div class="col-2"></div>
+            <div class="col-3 mc" id="mc2">
+              <h6>Song Title</h6>
+              <p>Artists</p>
+            </div>
+            <div class="col-2"></div>
+          </div>
+          <div class="row answer-mc">
+            <div class="col-2"></div>
+            <div class="col-3 mc" id="mc3">
+              <h6>Song Title</h6>
+              <p>Artists</p>
+            </div>
+            <div class="col-2"></div>
+            <div class="col-3 mc" id="mc4">
+              <h6>Song Title</h6>
+              <p>Artists</p>
+            </div>
+            <div class="col-2"></div>
+          </div>
+        </div>
       </div>
-      <div class="row answer-mc">
-        <div class="col-2"></div>
-        <div class="col-3 mc" id="mc1">
-          <h6>Song Title</h6>
-          <p>Artists</p>
+      <div id="answer" class="row" style="position: relative;">
+        <div class="track">
+          <div class="t-container">
+            <img src=""/>
+            <h4></h4>
+            <h5></h5>
+          </div>
         </div>
-        <div class="col-2"></div>
-        <div class="col-3 mc" id="mc2">
-          <h6>Song Title</h6>
-          <p>Artists</p>
-        </div>
-        <div class="col-2"></div>
       </div>
-      <div class="row answer-mc">
-        <div class="col-2"></div>
-        <div class="col-3 mc" id="mc3">
-          <h6>Song Title</h6>
-          <p>Artists</p>
-        </div>
-        <div class="col-2"></div>
-        <div class="col-3 mc" id="mc4">
-          <h6>Song Title</h6>
-          <p>Artists</p>
-        </div>
-        <div class="col-2"></div>
+      <div id="play-again" class="row" style="position: relative;">
+          <div class="p-a">
+            <h3>Play Again</h3>
+          </div>
       </div>
-      <span class="version">v1.0.0 beta 1</span>
+      <span class="version">v1.0.0 beta 2</span>
     </div>
     <script src="scripts/record.js"></script>
     <script>
@@ -247,6 +332,9 @@
         var currentTrack;
         $('.mbtn').css('opacity', '0.2');
         $('.mbtn').css('cursor', 'default');
+        $('#mc').css('display', 'none');
+        $('#answer').css('display', 'none');
+        $('#play-again').css('display', 'none');
         document.getElementById("note").style.display = "none";
         $('#menu').on('click', function clickHandler(e) {
           e.preventDefault();
@@ -263,6 +351,24 @@
             console.log(json);
             nextTrackData = json;
         });
+        $('.mc').on('click', function () {
+          if (isPlaying) {
+            if ($( this ).find("h6").html() == currentTrack.name) {
+              alert("correct!");
+            } else {
+              alert("incorrect!");
+            }
+            stopped = true;
+            stopSound();
+            $('#mc').css('display', 'none');
+            $('#quiz').css('display', 'none');
+            $(".track").find(".t-container").find("img").attr("src", currentTrack.thumbnail);
+            $(".track").find(".t-container").find("h4").html(currentTrack.name);
+            $(".track").find(".t-container").find("h5").html(currentTrack.artists.join(", "));
+            $('#answer').css('display', 'block');
+            $('#play-again').css('display', 'block');
+          }
+        });
         $('#playBtn').on('click', function clickHandler(e) {
           e.preventDefault();
           if (!isPlaying) {
@@ -278,6 +384,7 @@
                 $(mc[i]).find("p").html(currentTrack.wrong[3-i].split(" - ")[1]);
               }
             }
+            $('#mc').css('display', 'block');
             fetch(`http://localhost:8000/getsong`, {
               method:'GET'
             }).then(res => {

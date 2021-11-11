@@ -3,6 +3,7 @@ var audioBuffer, analyzer, frequency, soundsrc, isPlaying = false;
 var i = 0;
 var max = 255;
 var rot = 0;
+var stopped = false;
 var omega = 0;
 var color = 'rgb(' + Math.floor(Math.random() * max) + ', ' + Math.floor(Math.random() * max) + ', ' + Math.floor(Math.random() * max) + ')';
 function init() {
@@ -77,7 +78,11 @@ function loadSound(context, url) {
                 document.getElementById("note").style.display = "block";
                 document.getElementById("play").style.display = "none";
             }
-        }, onLoadSoundError);
+        }, function(){
+            setTimeout(function () {
+                loadSound(context, url);
+            }, 3000);
+        });
     }
     request.send();
 }
@@ -128,6 +133,10 @@ function playSound(context, buffer, start, url, begin) {
         soundsrc.connect(analyzer);
         soundsrc.addEventListener('ended', function(){
             stopSound();
+            if (stopped) {
+                stopped = false;
+                return;
+            }
             console.log(buffer);
             if ((buffer.duration-begin) < 30) {
                 loadSound2(context, url, buffer.duration, begin);
