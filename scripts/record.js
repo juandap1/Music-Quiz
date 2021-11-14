@@ -71,9 +71,15 @@ function loadSound(context, url) {
         context.decodeAudioData(request.response, function(buffer) {
             if(!isPlaying){
                 var initial = 0;
-                if (buffer.duration > 5) {
+                if (buffer.duration < 5) {
+                    loadSound(context, url);
+                    return;
+                }
+                if (buffer.duration > 10) {
                     initial = buffer.duration/2;
                 }
+                $('#mc').css('display', 'block');
+                $('.loading-overlay').css('display', 'none');
                 playSound(context, buffer, 0, url, initial);
                 document.getElementById("note").style.display = "block";
                 document.getElementById("play").style.display = "none";
@@ -141,7 +147,13 @@ function playSound(context, buffer, start, url, begin) {
             if ((buffer.duration-begin) < 30) {
                 loadSound2(context, url, buffer.duration, begin);
             } else {
-                deleteFile(url);
+                $('#mc').css('display', 'none');
+                $('#quiz').css('display', 'none');
+                $(".track").find(".t-container").find("img").attr("src", currentTrack.thumbnail);
+                $(".track").find(".t-container").find("h4").html(currentTrack.name);
+                $(".track").find(".t-container").find("h5").html(currentTrack.artists.join(", "));
+                $('#answer').css('display', 'block');
+                $('#play-again').css('display', 'block');
             }
         });
         soundsrc.start(0, start + begin, (30 + begin)-start);

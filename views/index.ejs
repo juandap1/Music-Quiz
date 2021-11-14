@@ -125,7 +125,7 @@
   
       .mnote {
           position: absolute;
-          max-width: 45px;
+          max-width: 55px;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
@@ -252,6 +252,58 @@
       .p-a:hover {
         transform: scale(1.05);
       }
+
+      .loading-overlay {
+        display: none;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        padding-bottom: 50px;
+        z-index: 100;
+        background-color: rgba(30, 30, 30, 0.9);
+      }
+
+      .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: center;
+        -webkit-animation: hue 7.5s infinite linear;
+        animation: hue 7.5s infinite linear;
+      }
+      .loading span {
+        font-size: 50px;
+        font-weight: bold;
+        transform: translateY(-10px);
+        background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .loading div {
+          width: 1rem;
+          height: 1rem;
+          margin: 2rem 0.3rem;
+          background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
+          border-radius: 50%;
+          animation: 0.9s bounce infinite alternate;
+      }
+      .loading div:nth-child(2) {
+        animation-delay: 0.3s;
+      }
+
+      .loading div:nth-child(3) {
+        animation-delay: 0.6s;
+      }
+
+      @keyframes bounce {
+        to {
+          opacity: 0.3;
+          transform: translate3d(0, -1rem, 0);
+        }
+      }
     </style>
   </head>
   <body>
@@ -270,6 +322,14 @@
       <a href="#">Contact</a>
     </div>
     <div id="main-page">
+      <div class="loading-overlay">
+        <div class="loading">
+          <span>Loading</span>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
       <div class="row" style="position: relative;">
           <span class="MQText t1">Music Quiz</span>
       </div>
@@ -277,7 +337,7 @@
         <div id="playBtn" class="row" style="position: relative;">
           <img id="record" class="record mbtn" src="assets/record.svg">
           <img id="note" class="mnote mbtn" src="assets/eighth-note.png">
-          <img id="play" class="mnote mbtn" style="margin-left: 5px;" src="assets/play.png">
+          <img id="play" class="mnote mbtn" style="margin-left: 2.5px;" src="assets/play.png">
         </div>
         <div id="mc">
           <div class="row answer-mc">
@@ -322,7 +382,7 @@
             <h3>Play Again</h3>
           </div>
       </div>
-      <span class="version">v1.0.0 beta 2</span>
+      <span class="version">v1.0.0 beta 3</span>
     </div>
     <script src="scripts/record.js"></script>
     <script>
@@ -351,6 +411,7 @@
             console.log(json);
             nextTrackData = json;
         });
+        deleteFile(nextTrackData.path);
         $('.mc').on('click', function () {
           if (isPlaying) {
             if ($( this ).find("h6").html() == currentTrack.name) {
@@ -372,6 +433,7 @@
         $('#playBtn').on('click', function clickHandler(e) {
           e.preventDefault();
           if (!isPlaying) {
+            $('.loading-overlay').css('display', 'block');
             loadSound(getAudioContext(), nextTrackData.path);
             currentTrack = nextTrackData;
             mc = shuffle(mc);
@@ -384,7 +446,6 @@
                 $(mc[i]).find("p").html(currentTrack.wrong[3-i].split(" - ")[1]);
               }
             }
-            $('#mc').css('display', 'block');
             fetch(`http://localhost:8000/getsong`, {
               method:'GET'
             }).then(res => {
@@ -393,6 +454,7 @@
             .then(json => {
               console.log(json);
               nextTrackData = json;
+              deleteFile(nextTrackData.path);
             });
           }
         });
@@ -400,6 +462,14 @@
         $('.mbtn').css('cursor', 'pointer');
         init();
         const xhttp = new XMLHttpRequest();
+        $('#play-again').on('click', function clickHandler(e) {
+          $('#quiz').css('display', 'block');
+          $('#mc').css('display', 'none');
+          $('#answer').css('display', 'none');
+          $('#play-again').css('display', 'none');
+          document.getElementById("note").style.display = "none";
+          $("#play").css("display", "block");
+        });
       });
     </script>
     <script>
