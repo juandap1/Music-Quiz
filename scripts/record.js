@@ -62,46 +62,45 @@ function getAudioContext() {
     return null;
 }
 
-function loadSound(context, url) {
-    console.log(url);
+function loadSound(context, track, ansType) {
     var request = new XMLHttpRequest();
-    request.open('GET', url, true);
+    request.open('GET', track.path, true);
     request.responseType = 'arraybuffer';
     request.onload = function() {
         context.decodeAudioData(request.response, function(buffer) {
             if(!isPlaying){
                 var initial = 0;
                 if (buffer.duration < 5) {
-                    loadSound(context, url);
+                    loadSound(context, track, ansType);
                     return;
                 }
                 if (buffer.duration > 10) {
                     initial = buffer.duration/2;
                 }
-                $('#mc').css('display', 'block');
+                $(ansType).css('display', 'block');
                 $('.loading-overlay').css('display', 'none');
-                playSound(context, buffer, 0, url, initial);
+                playSound(context, buffer, 0, track, initial, ansType);
                 document.getElementById("note").style.display = "block";
                 document.getElementById("play").style.display = "none";
             }
         }, function(){
             setTimeout(function () {
-                loadSound(context, url);
+                loadSound(context, track, ansType);
             }, 3000);
         });
     }
     request.send();
 }
 
-function loadSound2(context, url, start, initial) {
+function loadSound2(context, track, start, initial, ansType) {
     var request = new XMLHttpRequest();
-    request.open('GET', url, true);
+    request.open('GET', track.path, true);
     request.responseType = 'arraybuffer';
     request.onload = function() {
         context.decodeAudioData(request.response, function(buffer) {
             if(!isPlaying){
                 if (start < (initial + 30) && buffer.duration > start) {
-                    playSound(context, buffer, start, url, initial);
+                    playSound(context, buffer, start, track, initial, ansType);
                     document.getElementById("note").style.display = "block";
                     document.getElementById("play").style.display = "none";
                 }
@@ -122,7 +121,7 @@ function deleteFile(URL) {
     .then(json => console.log(json.result));
 }
 
-function playSound(context, buffer, start, url, begin) {
+function playSound(context, buffer, start, track, begin, ansType) {
     if (!isPlaying) {
         $('.mbtn').css('opacity', '1');
         $('.record').css('transform', 'translateX(-50%) rotate(' + rot + 'deg) scale(1, 1)');
@@ -145,13 +144,13 @@ function playSound(context, buffer, start, url, begin) {
             }
             console.log(buffer);
             if ((buffer.duration-begin) < 30) {
-                loadSound2(context, url, buffer.duration, begin);
+                loadSound2(context, track, buffer.duration, begin, ansType);
             } else {
-                $('#mc').css('display', 'none');
+                $(ansType).css('display', 'none');
                 $('#quiz').css('display', 'none');
-                $(".track").find(".t-container").find("img").attr("src", currentTrack.thumbnail);
-                $(".track").find(".t-container").find("h4").html(currentTrack.name);
-                $(".track").find(".t-container").find("h5").html(currentTrack.artists.join(", "));
+                $(".track").find(".t-container").find("img").attr("src", track.thumbnail);
+                $(".track").find(".t-container").find("h4").html(track.name);
+                $(".track").find(".t-container").find("h5").html(track.artists.join(", "));
                 $('#answer').css('display', 'block');
                 $('#play-again').css('display', 'block');
             }

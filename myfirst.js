@@ -12,6 +12,10 @@ app.use(cors());
 app.get('/', function(req, res) {
   res.render('index.ejs');
 });
+app.get('/settings', function(req, res) {
+  res.render('settings.ejs');
+});
+
 const Spotify = require('node-spotify-api');
 const spotifyClient = new Spotify({
     id: "cab5f78e5e2a44b993bcd3e999fa8a0e",
@@ -208,9 +212,23 @@ async function spotify_tracks_from_playlist(spotifyurl) {
   }
   var cur = await yts( track + " original audio" );
   //console.log(cur.videos[0]);
-  /*ytdl(cur.videos[0].url, {
+  ytdl(cur.videos[0].url, {
     format: 'mp3'
-  }).pipe(fs.createWriteStream(path));*/
+  }).pipe(fs.createWriteStream(path));
   trackData.path = path;
+  deleteFile(path);
   return JSON.stringify(trackData);
+}
+
+function deleteFile(url) {
+  if (fs.existsSync(path.join(__dirname, url))) { 
+    setTimeout(function () {
+      fs.unlink(path.join(__dirname, url), (err) => {
+        if (err) { 
+          console.log(err); 
+        } 
+      });
+      res.json({result: 'success'})
+    }, 3600000);
+  }
 }

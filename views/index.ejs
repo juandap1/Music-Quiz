@@ -11,307 +11,14 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-      @font-face {
-        font-family: MusicQuiz;
-        src: url(assets/BadMofo.ttf);
-      }
-
-      .MQText {
-          font-family: MusicQuiz;
-      }
-
-      body {
-        overflow-x: hidden;
-        position: fixed;
-        height: 100%;
-        width: 100%;
-      }
-
-      .header {
-        height: 50px;
-        width: 100%;
-        background-color: rgb(20, 20, 20);
-        transition: margin 0.5s;
-      }
-
-      .header.open {
-        margin-left: 250px;
-      }
-
-      .menu-button {
-        background: transparent;
-        outline: transparent;
-        border: none;
-        width: 40px;
-        height: 40px;
-        margin: 5px;
-        padding: 0;
-        border-radius: 50%;
-      }
-
-      .menu-button:hover {
-        background-color: rgba(150,150,150, 0.3);
-      }
-
-      #main-page {
-        position: relative;
-        background-color: rgb(20, 20, 20);
-        height: 100%;
-        transition: margin 0.5s;
-      }
-
-      #main-page.open {
-        margin-left: 250px;
-      }
-
-      .t1 {
-          position: relative;
-          font-size: 10vw;
-          height: 100%;
-          text-align: center;
-          padding: 0;
-          margin: 0;
-    
-          background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          -webkit-animation: hue 7.5s infinite linear;
-          animation: hue 7.5s infinite linear;
-      }
-  
-      @-webkit-keyframes hue {
-          from {
-              -webkit-filter: hue-rotate(0deg);
-          }
-          to {
-              -webkit-filter: hue-rotate(-360deg);
-          }
-      }
-      @keyframes hue {
-          from {
-              -webkit-filter: hue-rotate(0deg);
-          }
-          to {
-              -webkit-filter: hue-rotate(-360deg);
-          }
-      }
-      @-webkit-keyframes rev-hue {
-          from {
-              -webkit-filter: hue-rotate(-360deg);
-          }
-          to {
-              -webkit-filter: hue-rotate(0deg);
-          }
-      }
-      @keyframes rev-hue {
-          from {
-              -webkit-filter: hue-rotate(-360deg);
-          }
-          to {
-              -webkit-filter: hue-rotate(0deg);
-          }
-      }
-  
-      .record {
-          position: relative;
-          max-width: 250px;
-          margin: 30px 0;
-          z-index: 2;
-          left: 50%;
-          transform: translateX(-50%);
-      }
-  
-      .mnote {
-          position: absolute;
-          max-width: 55px;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          z-index: 2;
-      }
-  
-      #main-page svg {
-          position: absolute;
-          z-index: 0;
-          max-width: 310px;
-          top: 0%;
-          left: 50%;
-          transform: translateX(-50%);
-      }
-
-      .sidenav {
-        height: 100%;
-        width: 0;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        background-color: #111;
-        overflow-x: hidden;
-        transition: 0.5s;
-        padding-top: 60px;
-      }
-
-      .sidenav a {
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 25px;
-        color: #818181;
-        display: block;
-        transition: 0.3s
-      }
-
-      #mySidenav.open {
-        width:250px;
-      }
-
-      .answer-mc {
-        margin-bottom: 30px;
-      }
-
-      .mc {
-        text-align: center;
-        background: none;
-        padding: 0;
-        border: double 4px transparent;
-        border-radius: 7.5px;
-        background-image: linear-gradient(rgb(50, 50, 50), rgb(30, 30, 30)), -webkit-linear-gradient(92deg, #f35626, #feab3a);
-        background-origin: border-box;
-        background-clip: content-box, border-box;
-        -webkit-animation: hue 7.5s infinite linear;
-        animation: hue 7.5s infinite linear;
-        color: white;
-        cursor: pointer;
-      }
-
-      .mc:hover {
-        transform: scale(1.05);
-      }
-
-      .mc h6, p {
-        margin: 8px 0px;
-      }
-      
-      .version {
-        color: rgb(230,230,230);
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        margin: 10px 15px;
-      }
-
-      .track {
-        width: 300px;
-        background: none;
-        border: double 6px transparent;
-        border-radius: 7.5px;
-        background-image: linear-gradient(rgb(50, 50, 50), rgb(30, 30, 30)), -webkit-linear-gradient(92deg, #f35626, #feab3a);
-        background-origin: border-box;
-        background-clip: content-box, border-box;
-        -webkit-animation: hue 7.5s infinite linear;
-        animation: hue 7.5s infinite linear;
-        margin: auto;
-        padding: 0px;
-        text-align: center;
-        color: rgb(210,210,210);
-        margin-bottom: 50px;
-      }
-
-      .t-container {
-        margin: 20px;
-      }
-
-      .track img {
-        position: relative;
-        width: 80%;
-        border-radius: 15px;
-        margin: 20px 0px;
-        -webkit-animation: rev-hue 7.5s infinite linear;
-        animation: rev-hue 7.5s infinite linear;
-      }
-
-      .p-a {
-        width: 250px;
-        text-align: center;
-        background: none;
-        padding: 0;
-        border: double 4px transparent;
-        border-radius: 7.5px;
-        background-image: linear-gradient(rgb(50, 50, 50), rgb(30, 30, 30)), -webkit-linear-gradient(92deg, #f35626, #feab3a);
-        background-origin: border-box;
-        background-clip: content-box, border-box;
-        -webkit-animation: hue 7.5s infinite linear;
-        animation: hue 7.5s infinite linear;
-        color: white;
-        cursor: pointer;
-        margin: auto;
-      }
-
-      .p-a:hover {
-        transform: scale(1.05);
-      }
-
-      .loading-overlay {
-        display: none;
-        position: fixed;
-        height: 100%;
-        width: 100%;
-        padding-bottom: 50px;
-        z-index: 100;
-        background-color: rgba(30, 30, 30, 0.9);
-      }
-
-      .loading {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        display: flex;
-        justify-content: center;
-        -webkit-animation: hue 7.5s infinite linear;
-        animation: hue 7.5s infinite linear;
-      }
-      .loading span {
-        font-size: 50px;
-        font-weight: bold;
-        transform: translateY(-10px);
-        background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .loading div {
-          width: 1rem;
-          height: 1rem;
-          margin: 2rem 0.3rem;
-          background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
-          border-radius: 50%;
-          animation: 0.9s bounce infinite alternate;
-      }
-      .loading div:nth-child(2) {
-        animation-delay: 0.3s;
-      }
-
-      .loading div:nth-child(3) {
-        animation-delay: 0.6s;
-      }
-
-      @keyframes bounce {
-        to {
-          opacity: 0.3;
-          transform: translate3d(0, -1rem, 0);
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="../css/style.css">
   </head>
   <body>
     <div class="header">
       <button id="menu" class="menu-button" tabindex="0" type="button" aria-label="Menu">
         <img src="assets/menu.svg"/>
       </button>
-      <button class="menu-button" tabindex="0" type="button" aria-label="Menu" style="float: right;">
+      <button id="settings" class="menu-button" tabindex="0" type="button" aria-label="Menu" style="float: right;">
         <img src="assets/settings.svg"/>
       </button>
     </div>
@@ -367,6 +74,16 @@
             <div class="col-2"></div>
           </div>
         </div>
+        <div id="fr">
+          <div class="row" style="position: relative">
+            <div class="col-4"></div>
+            <div class="col-4">
+              <input id="fr-ans" type="text" placeholder="Enter in name of song or artist" autocomplete="off" />
+              <label class="fr-label" for="fr-ans">[ Press Enter to Submit ]</label>
+            </div>
+            <div class="col-4"></div>
+          </div>
+        </div>
       </div>
       <div id="answer" class="row" style="position: relative;">
         <div class="track">
@@ -382,17 +99,23 @@
             <h3>Play Again</h3>
           </div>
       </div>
-      <span class="version">v1.0.0 beta 3</span>
+      <span class="version">v1.0.0</span>
     </div>
     <script src="scripts/record.js"></script>
+    <script src="scripts/cookies.js"></script>
     <script>
       var mc = ["#mc1", "#mc2", "#mc3", "#mc4"];
       $( document ).ready(async function() {
         var nextTrackData;
         var currentTrack;
+        var ansType = "#mc";
+        if (getCookie("ansType") == "true") {
+          ansType = "#fr";
+        }
         $('.mbtn').css('opacity', '0.2');
         $('.mbtn').css('cursor', 'default');
         $('#mc').css('display', 'none');
+        $('#fr').css('display', 'none');
         $('#answer').css('display', 'none');
         $('#play-again').css('display', 'none');
         document.getElementById("note").style.display = "none";
@@ -401,6 +124,16 @@
           $('#mySidenav').toggleClass('open');
           $('.header').toggleClass('open');
           $('#main-page').toggleClass('open');
+        });
+        $('#settings').on('click', function clickHandler(e) {
+          e.preventDefault();
+          window.location.href = 'http://localhost:8000/settings';
+        });
+        $("#fr-ans").focus(function(){
+          $(".fr-label").css("display", "inline-block");
+        });
+        $("#fr-ans").focusout(function(){
+          $(".fr-label").css("display", "none");
         });
         await fetch(`http://localhost:8000/getsong`, {
             method:'GET'
@@ -430,11 +163,33 @@
             $('#play-again').css('display', 'block');
           }
         });
-        $('#playBtn').on('click', function clickHandler(e) {
+        $('#fr-ans').keypress(function(event){
+          var keycode = (event.keyCode ? event.keyCode : event.which);
+          if(keycode == '13'){
+            if ($("#fr-ans").val() != "" && isPlaying) {
+              if (checkFr($("#fr-ans").val(), currentTrack)) {
+                alert("correct!");
+              } else {
+                alert("incorrect!");
+              }
+              stopped = true;
+              stopSound();
+              $('#fr-ans').val("");
+              $('#fr').css('display', 'none');
+              $('#quiz').css('display', 'none');
+              $(".track").find(".t-container").find("img").attr("src", currentTrack.thumbnail);
+              $(".track").find(".t-container").find("h4").html(currentTrack.name);
+              $(".track").find(".t-container").find("h5").html(currentTrack.artists.join(", "));
+              $('#answer').css('display', 'block');
+              $('#play-again').css('display', 'block');
+            }
+          }
+        });
+        $('.mbtn').on('click', function clickHandler(e) {
           e.preventDefault();
           if (!isPlaying) {
             $('.loading-overlay').css('display', 'block');
-            loadSound(getAudioContext(), nextTrackData.path);
+            loadSound(getAudioContext(), nextTrackData, ansType);
             currentTrack = nextTrackData;
             mc = shuffle(mc);
             for (var i = 0; i < 4; i++) {
@@ -471,6 +226,25 @@
           $("#play").css("display", "block");
         });
       });
+      function checkFr(val, currentTrack) {
+        var count = 0;
+        var trackSplit = currentTrack.name.toLowerCase().split(" ");
+        var splitInp = val.toLowerCase().split(" ");
+        for (var j = 0; j < currentTrack.artists.length; j++) {
+          if (val.toLowerCase().includes(currentTrack.artists[j].toLowerCase())) {
+            return true;
+          }
+        }
+        for (var i = 0; i < splitInp.length; i++) {
+          if (trackSplit.includes(splitInp[i])) {
+            count++;
+          }
+        }
+        if (count >= .66*trackSplit.length) {
+          return true;
+        }
+        return false;
+      }
     </script>
     <script>
       //sendURL("https://www.youtube.com/watch?v=8F2s8ivKXNY");
