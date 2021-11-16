@@ -212,9 +212,9 @@ async function spotify_tracks_from_playlist(spotifyurl) {
   }
   var cur = await yts( track + " original audio" );
   //console.log(cur.videos[0]);
-  ytdl(cur.videos[0].url, {
+  /*ytdl(cur.videos[0].url, {
     format: 'mp3'
-  }).pipe(fs.createWriteStream(path));
+  }).pipe(fs.createWriteStream(path));*/
   trackData.path = path;
   deleteFile(path);
   return JSON.stringify(trackData);

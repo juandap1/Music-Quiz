@@ -21,6 +21,9 @@
       <button id="settings" class="menu-button" tabindex="0" type="button" aria-label="Menu" style="float: right;">
         <img src="assets/settings.svg"/>
       </button>
+      <button id="game-mode" class="menu-button-2" tabindex="0" type="button" aria-label="Menu" style="float: right;">
+        Change Gamemode
+      </button>
     </div>
     <div id="mySidenav" class="sidenav">
       <a href="#">About</a>
@@ -38,7 +41,13 @@
         </div>
       </div>
       <div class="row" style="position: relative;">
-          <span class="MQText t1">Music Quiz</span>
+          <div style="text-align: center;">
+            <h2 class="MQText t1">
+              <span class="rainbow">Music Quiz</span>
+              <img class="w-c" id="correct" src="assets/correct.png">
+              <img class="w-c" id="wrong" src="assets/wrong-mark.png">
+            </h2>
+          </div>
       </div>
       <div id="quiz">
         <div id="playBtn" class="row" style="position: relative;">
@@ -76,12 +85,20 @@
         </div>
         <div id="fr">
           <div class="row" style="position: relative">
-            <div class="col-4"></div>
-            <div class="col-4">
+            <div class="col-4" style="padding: 0;"></div>
+            <div class="col-4" style="padding: 0;">
               <input id="fr-ans" type="text" placeholder="Enter in name of song or artist" autocomplete="off" />
               <label class="fr-label" for="fr-ans">[ Press Enter to Submit ]</label>
             </div>
-            <div class="col-4"></div>
+            <div class="col-4" style="padding: 0;"></div>
+          </div>
+          <div class="row" style="position: relative">
+            <div class="col-5" style="padding: 0;"></div>
+            <div class="col-2" style="padding: 0;">
+              <img id="fr-w-1" class="fr-wrong" src="assets/wrong.png" />
+              <img id="fr-w-2" class="fr-wrong" src="assets/wrong.png" />
+            </div>
+            <div class="col-5" style="padding: 0;"></div>
           </div>
         </div>
       </div>
@@ -99,7 +116,7 @@
             <h3>Play Again</h3>
           </div>
       </div>
-      <span class="version">v1.0.0</span>
+      <span class="version">v1.0.1</span>
     </div>
     <script src="scripts/record.js"></script>
     <script src="scripts/cookies.js"></script>
@@ -108,6 +125,7 @@
       $( document ).ready(async function() {
         var nextTrackData;
         var currentTrack;
+        var attemptCount;
         var ansType = "#mc";
         if (getCookie("ansType") == "true") {
           ansType = "#fr";
@@ -148,9 +166,9 @@
         $('.mc').on('click', function () {
           if (isPlaying) {
             if ($( this ).find("h6").html() == currentTrack.name) {
-              alert("correct!");
+              $("#correct").css("display", "block");
             } else {
-              alert("incorrect!");
+              $("#wrong").css("display", "block");
             }
             stopped = true;
             stopSound();
@@ -168,26 +186,33 @@
           if(keycode == '13'){
             if ($("#fr-ans").val() != "" && isPlaying) {
               if (checkFr($("#fr-ans").val(), currentTrack)) {
-                alert("correct!");
+                $("#correct").css("display", "block");
               } else {
-                alert("incorrect!");
+                attemptCount++;
+                if (attemptCount < 3) {
+                  $("#fr-w-" + attemptCount).css("display", "block");
+                  return;
+                }
+                $("#wrong").css("display", "block");
               }
-              stopped = true;
-              stopSound();
               $('#fr-ans').val("");
               $('#fr').css('display', 'none');
               $('#quiz').css('display', 'none');
+              $('.fr-wrong').css('display', 'none');
               $(".track").find(".t-container").find("img").attr("src", currentTrack.thumbnail);
               $(".track").find(".t-container").find("h4").html(currentTrack.name);
               $(".track").find(".t-container").find("h5").html(currentTrack.artists.join(", "));
               $('#answer').css('display', 'block');
               $('#play-again').css('display', 'block');
+              stopped = true;
+              stopSound();
             }
           }
         });
         $('.mbtn').on('click', function clickHandler(e) {
           e.preventDefault();
           if (!isPlaying) {
+            attemptCount = 0;
             $('.loading-overlay').css('display', 'block');
             loadSound(getAudioContext(), nextTrackData, ansType);
             currentTrack = nextTrackData;
@@ -221,6 +246,8 @@
           $('#quiz').css('display', 'block');
           $('#mc').css('display', 'none');
           $('#answer').css('display', 'none');
+          $("#correct").css("display", "none");
+          $("#wrong").css("display", "none");
           $('#play-again').css('display', 'none');
           document.getElementById("note").style.display = "none";
           $("#play").css("display", "block");

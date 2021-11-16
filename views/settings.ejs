@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="row" style="position: relative;">
-        <span class="MQText t1">Music Quiz</span>
+        <span class="MQText t1">Settings</span>
       </div>
       <div class="row setting-row">
         <div class="col-3"></div>
@@ -48,6 +48,45 @@
         <div class="col-3">
             <label class="switch">
                 <input id="ans-tog" type="checkbox">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="col-3"></div>
+      </div>
+      <div class="row setting-row">
+        <div class="col-3"></div>
+        <div class="col-3">
+            <h6 id="art-tog-txt">Accept Artist as Answer (Free Response Mode)</h6>
+        </div>
+        <div class="col-3">
+            <label class="switch">
+                <input id="art-tog" type="checkbox">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="col-3"></div>
+      </div>
+      <div class="row setting-row">
+        <div class="col-3"></div>
+        <div class="col-3">
+            <h6 id="sd-tog-txt">Sudden Death (Free Response Mode)</h6>
+        </div>
+        <div class="col-3">
+            <label class="switch">
+                <input id="sd-tog" type="checkbox">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="col-3"></div>
+      </div>
+      <div class="row setting-row">
+        <div class="col-3"></div>
+        <div class="col-3">
+            <h6 id="tl-tog-txt">Time limit</h6>
+        </div>
+        <div class="col-3">
+            <label class="switch">
+                <input id="tl-tog" type="checkbox" checked>
                 <span class="slider round"></span>
             </label>
         </div>
@@ -78,6 +117,12 @@
                 $("#ans-tog-txt").html("Switch to Free Response");
                 ext[0] = "?aT=false";
             }
+        });
+        $('#menu').on('click', function clickHandler(e) {
+          e.preventDefault();
+          $('#mySidenav').toggleClass('open');
+          $('.header').toggleClass('open');
+          $('#main-page').toggleClass('open');
         });
     });
     </script>

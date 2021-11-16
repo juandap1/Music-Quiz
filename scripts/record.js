@@ -148,6 +148,7 @@ function playSound(context, buffer, start, track, begin, ansType) {
             } else {
                 $(ansType).css('display', 'none');
                 $('#quiz').css('display', 'none');
+                $(".countdown").remove();
                 $(".track").find(".t-container").find("img").attr("src", track.thumbnail);
                 $(".track").find(".t-container").find("h4").html(track.name);
                 $(".track").find(".t-container").find("h5").html(track.artists.join(", "));
@@ -158,6 +159,7 @@ function playSound(context, buffer, start, track, begin, ansType) {
         soundsrc.start(0, start + begin, (30 + begin)-start);
         if (start == 0) {
             render();
+            $("#main-page").append('<div class="countdown"></div>');
         }
     }
 }
